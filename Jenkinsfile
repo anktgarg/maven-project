@@ -27,7 +27,7 @@ pipeline {
 
 			stage('Deploy to staging') {
 				steps {
-					sh 'ssh -i /var/lib/jenkins/sakey **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat7/webapps"
+					sh 'ssh -i /var/lib/jenkins/sakey **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat7/webapps'
 				}
 			}
 		}
