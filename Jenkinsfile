@@ -25,8 +25,15 @@ pipeline {
 			}
 		}
 
+		 stage('Deploy to QA') {
+                        steps {
+                                sh "docker build . -t myapp:${env.BUILD_ID}"
+				sh 'docker run -d -rm -p 9000:8080-v /myapp:/usr/local/tomcat/webapps/ -name myapp_${env.BUILD_ID} myapp:${env.BUILD_ID}
+                        }  
+                }
 
-		stage('Deploy to staging') {
+
+/*		stage('Deploy to staging') {
 			steps {
 				sh "scp -i /var/lib/jenkins/sakey -o StrictHostKeyChecking=no **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat/webapps"
 			}
@@ -34,7 +41,8 @@ pipeline {
 		stege('Deploy to Production') {
 			steps {
 				sh "scp -i /var/lib/jenkins/sakey -o StrictHostKeyChecking=no **/target/*.war ec2-user@${params.tomcat_prod}:/var/lib/tomcat/webapps"
-	}
+		}
+	}*/
 }
 
 			
