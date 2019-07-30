@@ -1,42 +1,40 @@
 pipeline {
-    agent any
+	agent any
+	parameters {
+		string defaultValue: '172.31.11.181', description: 'Tomcat Staging environment', name: 'tomcat_dev', trim: false
+		string defaultValue: '172.31.8.150', description: 'Tomcat Prod environment', name: 'tomcat_prod', trim: false
+	}
 
-    parameters {
-         string(name: 'tomcat_dev', defaultValue: '172.31.11.181', description: 'Staging Server')
-         string(name: 'tomcat_prod', defaultValue: '172.31.8.150', description: 'Production Server')
-    }
+	triggers {
+		pollSCM '* * * * *'
+	}
 
-    triggers {
-         pollSCM('* * * * *')
-     }
+	stages {
 
-stages{
-        stage('Build'){
-            steps {
-                sh 'mvn clean package'
-            }
-            post {
-                success {
-                    echo 'Now Archiving...'
-                    archiveArtifacts artifacts: '**/target/*.war'
-                }
-            }
-        }
+		stage('Build') {
+			
+			steps {
+				sh 'mvn clean package'
+			}
 
-        stage ('Deployments'){
-            parallel{
-                stage ('Deploy to Staging'){
-                    steps {
-                        sh "scp -i /var/lib/jenkins/sakey -o StrictHostKeyChecking=no **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat/webapps"
-                    }
-                }
+			post {
+				success {
+				    echo "Archiving now.."
+				    archiveArtifacts '**/target/*.war'
+				}
+			}
+		}
 
-                stage ("Deploy to Production"){
-                    steps {
-                        sh "scp -i /var/lib/jenkins/sakey -o StrictHostKeyChecking=no **/target/*.war ec2-user@${params.tomcat_prod}:/var/lib/tomcat/webapps"
-                    }
-                }
-            }
-        }
-    }
+
+		stage('Deploy to staging') {
+			steps {
+				sh "scp -i /var/lib/jenkins/sakey -o StrictHostKeyChecking=no **/target/*.war ec2-user@${params.tomcat_dev}:/var/lib/tomcat/webapps"
+			}
+		}
+		stege('Deploy to Production') {
+			steps {
+				sh "scp -i /var/lib/jenkins/sakey -o StrictHostKeyChecking=no **/target/*.war ec2-user@${params.tomcat_prod}:/var/lib/tomcat/webapps"
+	}
 }
+
+			
