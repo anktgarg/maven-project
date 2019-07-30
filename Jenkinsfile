@@ -28,7 +28,7 @@ pipeline {
 		 stage('Deploy to QA') {
                         steps {
                                 sh "docker build . -t myapp:${env.BUILD_ID}"
-				sh "docker run -d --rm -p 9000:8080-v /myapp:/usr/local/tomcat/webapps/ --name myapp_${env.BUILD_ID} myapp:${env.BUILD_ID}"
+				sh "docker run -d --rm -p 9000:8080 -v /myapp:/usr/local/tomcat/webapps/ --name myapp_${env.BUILD_ID} myapp:${env.BUILD_ID}"
                         }  
                 }
 
