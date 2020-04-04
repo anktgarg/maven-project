@@ -64,7 +64,7 @@ resource "aws_instance" "my_ec2" {
   }
 
   provisioner "file" {
-    source      = "/var/lib/jenkins/workspace/maven_pipeline/webapp/target/webapp_${BUILD_NUMBER}.war"
+    source      = "/var/lib/jenkins/workspace/maven_pipeline/webapp/target/webapp_"${var.BUILD_NUMBER}".war"
     destination = "/home/ec2-user/webapp.war"
   }
 
