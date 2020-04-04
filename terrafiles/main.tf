@@ -51,7 +51,7 @@ resource "aws_instance" "my_ec2" {
     type = "ssh"
     user = "ec2-user"
     host = aws_instance.my_ec2.public_ip
-    private_key = file("terra2.pem")
+    private_key = file("./terra2.pem")
   }
 
   provisioner "remote-exec" {
